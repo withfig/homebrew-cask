@@ -1,16 +1,17 @@
 cask "fig" do
-  version "1.0.62,542"
-  sha256 "0c70a157cf16785e8175fce7efc1bb6a2e056a099b9da5c673a7904f4b205e07"
+  version "2.5.8-beta.13"
+  sha256 "0fdc6f9c5e918796cf36fee5b4dc6d7d078fa093ba7dfddf7b0a0edd19851ece"
 
-  url "https://versions.withfig.com/fig%20#{version.csv.second}.dmg",
-      verified: "versions.withfig.com/"
+  url "https://repo.fig.io/generic/beta/asset/#{version}/universal/fig.dmg"
   name "fig"
   desc "Reimagine your terminal"
   homepage "https://fig.io/"
 
   livecheck do
-    url "https://versions.withfig.com/appcast.xml"
-    strategy :sparkle
+    url "https://repo.fig.io/generic/beta/index.json"
+    strategy :page_match do |page|
+      JSON.parse(page)["hints"]["livecheck"]
+    end
   end
 
   auto_updates true
@@ -22,7 +23,7 @@ cask "fig" do
   uninstall script:
                        {
                          executable: "#{appdir}/Fig.app/Contents/MacOS/fig-darwin-universal",
-                         args:       ["app", "uninstall"],
+                         args:       ["app", "uninstall", "--no-open"],
                        },
             launchctl:
                        [
